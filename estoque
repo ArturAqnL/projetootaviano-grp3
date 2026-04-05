@@ -1,1 +1,82 @@
-aqui vai ficar oq escreveremos em breve
+Model:
+// models/OrderModel.js
+
+export default class OrderModel {
+    constructor(product_id, sku, product_name, quantity, unit_price, discount, total_price) {
+        this.product_id = product_id;
+        this.sku = sku;
+        this.product_name = product_name;
+        this.quantity = quantity;
+        this.unit_price = unit_price;
+        this.discount = discount;
+        this.total_price = total_price;
+        this.status = "confirmed";   // padrão
+        this.created_at = new Date(); // data do pedido
+    }
+}
+
+Controller: 
+// controllers/OrderController.js
+
+import OrderModel from "../models/OrderModel.js";
+
+class OrderController {
+
+    static async createOrder(req, res) {
+        try {
+            const { sku, quantity } = req.body;
+
+            // -------------------------------
+            // SIMULAÇÃO DE CONSULTA AO CATÁLOGO
+            // -------------------------------
+            const catalogData = {
+                product_id: 1,
+                product_name: "Notebook Dell XPS 13",
+                unit_price: 5499.99,
+                discount: 10,
+                final_price: 4949.99
+            };
+
+            // -------------------------------
+            // SIMULAÇÃO DE ESTOQUE
+            // -------------------------------
+            const stockData = {
+                available_quantity: 10
+            };
+
+            if (stockData.available_quantity < quantity) {
+                return res.status(400).json({
+                    success: false,
+                    message: "Estoque insuficiente"
+                });
+            }
+
+            // -------------------------------
+            // CRIA O PEDIDO
+            // -------------------------------
+            const order = new OrderModel(
+                catalogData.product_id,
+                sku,
+                catalogData.product_name,
+                quantity,
+                catalogData.unit_price,
+                catalogData.discount,
+                catalogData.final_price * quantity
+            );
+
+            return res.status(201).json({
+                success: true,
+                message: "Pedido criado com sucesso!",
+                data: order
+            });
+
+        } catch (error) {
+            return res.status(500).json({
+                success: false,
+                message: "Erro ao criar o pedido"
+            });
+        }
+    }
+}
+
+export default OrderController;
