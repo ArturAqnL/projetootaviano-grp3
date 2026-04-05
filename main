@@ -1,0 +1,152 @@
+"""
+=============================================================
+ SERVIÇO DE PEDIDOS — Marketplace Universitário
+ Grupo 3 | FastAPI + Python
+=============================================================
+"""
+
+import uuid
+from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel
+from typing import List
+
+# ---------------------------------------------------------------------------
+# INICIALIZAÇÃO
+# ---------------------------------------------------------------------------
+app = FastAPI(
+    title="Serviço de Pedidos",
+    version="1.0.0",
+)
+
+# ---------------------------------------------------------------------------
+# SIMULAÇÃO - CATÁLOGO (Grupo 1)
+# ---------------------------------------------------------------------------
+CATALOGO_SIMULADO = {
+    "DELL-XPS13-2024": {
+        "product_id": 1,
+        "product_name": "Notebook Dell XPS 13",
+        "unit_price": 5499.99,
+        "discount": 10.00,
+        "final_price": 4949.99,
+    }
+}
+
+# ---------------------------------------------------------------------------
+# SIMULAÇÃO - ESTOQUE (Grupo 2)
+# ---------------------------------------------------------------------------
+ESTOQUE_SIMULADO = {
+    "DELL-XPS13-2024": {
+        "available_quantity": 10
+    }
+}
+
+# ---------------------------------------------------------------------------
+# "BANCO" EM MEMÓRIA
+# ---------------------------------------------------------------------------
+pedidos = []
+
+# ---------------------------------------------------------------------------
+# MODELOS
+# ---------------------------------------------------------------------------
+class ItemPedido(BaseModel):
+    sku: str
+    quantity: int
+
+
+class CriarPedidoRequest(BaseModel):
+    items: List[ItemPedido]
+
+
+# ---------------------------------------------------------------------------
+# POST - CRIAR PEDIDO
+# ---------------------------------------------------------------------------
+@app.post("/v1/orders")
+def criar_pedido(request: CriarPedidoRequest):
+
+    itens = []
+    total_price = 0.0
+
+    for item in request.items:
+
+        sku = item.sku.upper()
+
+        produto = CATALOGO_SIMULADO.get(sku)
+        if not produto:
+            raise HTTPException(status_code=404, detail="Produto não encontrado")
+
+        estoque = ESTOQUE_SIMULADO.get(sku)
+        if not estoque:
+            raise HTTPException(status_code=404, detail="Produto sem estoque cadastrado")
+
+        if item.quantity > estoque["available_quantity"]:
+            raise HTTPException(status_code=400, detail="Estoque insuficiente")
+
+        itens.append({
+            "sku": sku,
+            "quantity": item.quantity,
+            "unit_price": produto["unit_price"],
+            "discount": produto["discount"],
+        })
+
+        total_price += produto["final_price"] * item.quantity
+
+    pedido = {
+        "order_id": str(uuid.uuid4()),
+        "items": itens,
+        "total_price": round(total_price, 2),
+        "status": "confirmed"
+    }
+
+    pedidos.append(pedido)
+
+    return {
+        "success": True,
+        "data": pedido
+    }
+
+
+# ---------------------------------------------------------------------------
+# GET - LISTAR TODOS OS PEDIDOS
+# ---------------------------------------------------------------------------
+@app.get("/v1/orders")
+def listar_pedidos():
+    return {
+        "success": True,
+        "data": pedidos
+    }
+
+
+# ---------------------------------------------------------------------------
+# GET - BUSCAR PEDIDO POR ID
+# ---------------------------------------------------------------------------
+@app.get("/v1/orders/{order_id}")
+def buscar_pedido(order_id: str):
+    for pedido in pedidos:
+        if pedido["order_id"] == order_id:
+            return {"success": True, "data": pedido}
+
+    raise HTTPException(status_code=404, detail="Pedido não encontrado")
+
+
+# ---------------------------------------------------------------------------
+# DELETE - REMOVER PEDIDO
+# ---------------------------------------------------------------------------
+@app.delete("/v1/orders/{order_id}")
+def deletar_pedido(order_id: str):
+    for i, pedido in enumerate(pedidos):
+        if pedido["order_id"] == order_id:
+            pedidos.pop(i)
+            return {
+                "success": True,
+                "message": "Pedido removido com sucesso"
+            }
+
+    raise HTTPException(status_code=404, detail="Pedido não encontrado")
+
+
+# ---------------------------------------------------------------------------
+# HEALTH CHECK
+# ---------------------------------------------------------------------------
+@app.get("/health")
+def health():
+    return {"status": "ok"}
