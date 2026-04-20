@@ -5,6 +5,7 @@ a disponibilidade em estoque por meio dos serviços de Catálogo e Estoque.
 📁 Estrutura do Projeto
 '''bash
 penis de orangotango velho encardido
+'''
 🚀 Como executar
 
 📌 Endpoints Disponíveis
