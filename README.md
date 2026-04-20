@@ -161,4 +161,4 @@ https://github.com/otavianosilverio/Api-Produtos-Python
 * O versionamento foi feito com Git
 
 ## 🖥️ Implantação de API FastApi na Máquina EC2
-### 1.
+### 1. Fazer Login na controle AWS: aws.amazon.com
