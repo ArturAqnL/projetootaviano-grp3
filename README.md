@@ -161,3 +161,4 @@ https://github.com/otavianosilverio/Api-Produtos-Python
 * O versionamento foi feito com Git
 
 ## 🖥️ Implantação de API FastApi na Máquina EC2
+### 1.
