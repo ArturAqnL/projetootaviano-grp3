@@ -160,4 +160,4 @@ https://github.com/otavianosilverio/Api-Produtos-Python
 * O projeto segue o padrão REST
 * O versionamento foi feito com Git
 
-* 🖥️ Implantação de API FastApi na Máquina EC2
+## 🖥️ Implantação de API FastApi na Máquina EC2
