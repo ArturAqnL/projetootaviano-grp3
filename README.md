@@ -140,9 +140,11 @@ A API pode ser testada utilizando ferramentas como Postman ou Insomnia.
 
 ## 👥 Equipe
 
-* Nome do Integrante 1
-* Nome do Integrante 2
-* Nome do Integrante 3
+* Matheus
+* Artur 
+* Max
+* Diego
+* Gabriel
 
 ---
 
