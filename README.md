@@ -3,12 +3,14 @@ marketplace distribuído. Antes de confirmar um pedido, o serviço verifica as i
 a disponibilidade em estoque por meio dos serviços de Catálogo e Estoque.
 
 📁 Estrutura do Projeto
-'''bash
-penis de orangotango velho encardido
-'''
+
 🚀 Como executar
 
 📌 Endpoints Disponíveis
 
+### 2. Crie um ambiente virtual
 
+```
+python -m venv venv
+```
 
