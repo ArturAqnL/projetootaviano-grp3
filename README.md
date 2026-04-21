@@ -162,3 +162,8 @@ https://github.com/otavianosilverio/Api-Produtos-Python
 
 ## 🖥️ Implantação de API FastApi na Máquina EC2
 ### 1. Fazer Login na controle AWS: aws.amazon.com
+### 2. Clicar no "EC2" no Canto Esquerdo da tela.
+### 3. Clicar no botão Laranja "Launch Instances" no canto direito superior.
+### 4. Colocar nome, imagem da máquina (Linux), e a versão.
+### 5. Instance Type
+Escolher o t2.micro (gratuito)
