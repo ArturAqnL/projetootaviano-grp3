@@ -176,4 +176,4 @@ Escolher o t2.micro (gratuito)
 ### 8.Checagem Final
 Depois de conferir todas as configurações selecionadas, clicar no botão laranja "Launch Instance"
 ### 9. Ver funcionando
-Ir ao "EC2 Dashboard" e ver as Instâncias funcionando, "Instance State" tem que estar Running
+Ir ao "EC2 Dashboard" e ver as Instâncias funcionando, "Instance State" tem que estar Running✅
