@@ -167,3 +167,13 @@ https://github.com/otavianosilverio/Api-Produtos-Python
 ### 4. Colocar nome, imagem da máquina (Linux), e a versão.
 ### 5. Instance Type
 Escolher o t2.micro (gratuito)
+### 6. Key Pair (Login)
+1) Create new Key pair: Escolher um nome --> Create
+   Deve aparecer uma chave na pasta de Downloads
+### 7. Network Settings
+1) Deixar marcado a opção "Allow SSH traffic from" e do lado disso "Anywhere"
+2) Deixar marcado a opção "Allow HTTP traffic from the internet" e "Allow HTTPs traffic from the internet"
+### 8.Checagem Final
+Depois de conferir todas as configurações selecionadas, clicar no botão laranja "Launch Instance"
+### 9. Ver funcionando
+Ir ao "EC2 Dashboard" e ver as Instâncias funcionando, "Instance State" tem que estar Running
