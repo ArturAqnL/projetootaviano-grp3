@@ -192,10 +192,18 @@ Obs.: Se não estiver Running pode estar pendente, é só esperar.
 1) Clicar em "Connect" no canto superior direito
 2) Clicar na opção de "SSH client", se estiver usando Linux ou Mac as instruções devem estar corretas. Se for Windows pesquisar "como fazer SSH a partir do Windows".
 Obs.: As versões mais recentes do WIndows 10 tem o SSH incluso no S.O
-### 10.1. Como fazer SSH a partir do Windows
+### 10.1 Como fazer SSH a partir do Windows
 1) No próprio Windows: Configurações -> Sistema -> Recursos Opcionais -> Adicionar recurso opcional: Exibir Recurso -> pesquisar: Servidor OpenSSH
 2) Marcar a caixinha e clicar em "Avançar" e "Instalar"
-#### Fazer o SSH funcionar
+#### 10.1.1 Fazer o SSH funcionar
+1) Pesquisar na barra no WIndows: "Serviços", procurar o "Open SSH SSH Server" e clicar 2x para abrir.
+2) Tipo de inicialização deve estar no "Automático", para abrir junto com o Windows.
+3) CLicar em iniciar, e depois em "Aplicar" quando terminado, e depois no "Ok"
+#### 10.1.2 Testando
+1) Abrir o cmd e digitar "ssh "usuario"@"ip", ex: obertobr@192.168.0.10
+2) password: A senha do Windows
+3) digitar "dir" para ver se aparece o .ssh. Obs.: Para entrar de uma rede externa, tem que abrir porta do roteador.
+4) Digitar "start calc", para abrir a calculadora, e "exit" para fechar conexão ao ip.
 
 ### 11. Usar o arquivo de chave privada SSH ".pem" criado anteriormente, alterar as permissões para que não seja visível publicamente, e então conectar à instância usando o comando escrito no " Example:"
 1) (Deve estar no diretório onde copiou a chave ".pem"). Dar um "ls" no console, deve aparecer a chave ".pem"
