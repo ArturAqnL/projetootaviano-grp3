@@ -190,7 +190,7 @@ Obs.: Se não estiver Running pode estar pendente, é só esperar.
 
 ### 10. Conectar-se à instância
 1) Clicar em "Connect" no canto superior direito
-2) Clicar na opção de "SSH client", se estiver usando Linux ou Mac as instruções devem estar corretas. Se for Windows pesquisar "como fazer SSH a partir do Windows"
+2) Clicar na opção de "SSH client", se estiver usando Linux ou Mac as instruções devem estar corretas. Se for Windows pesquisar "como fazer SSH a partir do Windows".
 Obs.: As versões mais recentes do WIndows 10 tem o SSH incluso no S.O
 
 ### 11. Usar o arquivo de chave privada SSH ".pem" criado anteriormente, alterar as permissões para que não seja visível publicamente, e então conectar à instância usando o comando escrito no " Example:"
