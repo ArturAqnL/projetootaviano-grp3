@@ -1,256 +1,532 @@
-# 📦 API de Produtos
+# 📦 Serviço de Orders
 
-## 📖 Sobre o projeto
+## 📖 Sobre o Projeto
 
-Esta aplicação consiste em uma API REST desenvolvida em Python para gerenciamento de produtos. O sistema permite realizar operações básicas de CRUD (Create, Read, Update, Delete), permitindo o controle de um catálogo de produtos.
+O Serviço de Orders foi desenvolvido pelo Grupo 3 como parte de uma arquitetura de marketplace baseada em microserviços. Sua principal responsabilidade é receber solicitações de compra realizadas pelos clientes, validar informações dos produtos e verificar a disponibilidade em estoque antes de confirmar um pedido.
 
-O projeto foi desenvolvido a partir de um modelo base disponibilizado em aula, com adaptações realizadas pelo grupo.
-
----
-
-## 🎯 Objetivo
-
-Desenvolver uma API funcional seguindo boas práticas de organização, versionamento e documentação, garantindo colaboração entre os integrantes.
+O sistema foi desenvolvido utilizando Python e FastAPI, seguindo os princípios de APIs REST para garantir comunicação eficiente entre os serviços que compõem o marketplace.
 
 ---
 
-## 🛠️ Tecnologias utilizadas
+# 🎯 Objetivo
 
-* Python
-* Flask
-* SQLite
-* Git e GitHub
+Desenvolver uma API REST capaz de processar pedidos de forma organizada e segura, aplicando conceitos de microserviços, integração entre APIs, versionamento de código, computação em nuvem e implantação em ambiente Linux.
 
 ---
 
-## 📁 Estrutura do projeto
+# 🛠️ Tecnologias Utilizadas
 
+* 🐍 Python
+* ⚡ FastAPI
+* 📋 Pydantic
+* 🔄 REST API
+* 📄 JSON
+* 🆔 UUID
+* ☁️ AWS EC2
+* 🌐 NGINX
+* 🚀 Uvicorn
+* 🔧 Git
+* 📂 GitHub
+
+---
+
+# 🏗️ Arquitetura do Sistema
+
+O Serviço de Orders integra-se aos demais serviços do marketplace.
+
+## 📚 Serviço de Catálogo (Grupo 1)
+
+Responsável por fornecer informações detalhadas dos produtos cadastrados.
+
+Endpoint utilizado:
+
+```http
+GET /v1/products/{sku}
 ```
-api-produtos/
-│── app.py
-│── database.py
-│── models/
-│   └── produto.py
-│── routes/
-│   └── produto_routes.py
-│── requirements.txt
-│── README.md
+
+Retorna:
+
+* Product ID
+* Nome do produto
+* SKU
+* Preço unitário
+* Desconto
+* Preço final
+
+---
+
+## 📦 Serviço de Estoque (Grupo 2)
+
+Responsável por verificar a disponibilidade dos produtos.
+
+Endpoint utilizado:
+
+```http
+GET /v1/stock/{product_id}
+```
+
+Retorna:
+
+* Product ID
+* Quantidade disponível
+
+---
+
+# 📁 Estrutura do Projeto
+
+```text
+orders-service/
+│
+├── main.py
+├── requirements.txt
+├── README.md
+│
+├── models/
+├── services/
+├── routes/
+└── tests/
 ```
 
 ---
 
-## ⚙️ Como executar
+# ⚙️ Como Executar o Projeto
 
-### 1. Clone o repositório
+## 1. Clonar o Repositório
 
+```bash
+git clone <repositorio>
+cd orders-service
 ```
-git clone https://github.com/seu-usuario/api-produtos.git
-cd api-produtos
-```
 
-### 2. Crie um ambiente virtual
+## 2. Criar Ambiente Virtual
 
-```
+```bash
 python -m venv venv
 ```
 
-### 3. Ative o ambiente
+## 3. Ativar Ambiente Virtual
 
 Windows:
 
-```
+```bash
 venv\Scripts\activate
 ```
 
 Linux/Mac:
 
-```
+```bash
 source venv/bin/activate
 ```
 
-### 4. Instale as dependências
+## 4. Instalar Dependências
 
-```
+```bash
 pip install -r requirements.txt
 ```
 
-### 5. Execute a aplicação
+## 5. Executar Aplicação
 
-```
-python app.py
+```bash
+uvicorn main:app --reload
 ```
 
-A API estará disponível em:
+A API ficará disponível em:
 
-```
-http://localhost:5000
+```text
+http://localhost:8000
 ```
 
 ---
 
-## 🔗 Endpoints
+# 🔗 Endpoints
 
-### Listar todos os produtos
+## ➕ Criar Order
 
-```
-GET /produtos
-```
-
-### Buscar produto por ID
-
-```
-GET /produtos/{id}
+```http
+POST /v1/orders
 ```
 
-### Criar novo produto
+## 📋 Listar Orders
 
-```
-POST /produtos
+```http
+GET /v1/orders
 ```
 
-Exemplo de JSON:
+## 🔍 Buscar Order por ID
+
+```http
+GET /v1/orders/{order_id}
+```
+
+## 🗑️ Remover Order
+
+```http
+DELETE /v1/orders/{order_id}
+```
+
+## ❤️ Health Check
+
+```http
+GET /health
+```
+
+---
+
+# 📨 Exemplo de Requisição
 
 ```json
 {
-  "nome": "Produto Exemplo",
-  "preco": 99.90,
-  "descricao": "Descrição do produto"
+  "items": [
+    {
+      "sku": "DELL-XPS13-2024",
+      "quantity": 1
+    }
+  ]
 }
 ```
 
-### Atualizar produto
+---
 
-```
-PUT /produtos/{id}
-```
+# 📬 Exemplo de Resposta
 
-### Remover produto
-
-```
-DELETE /produtos/{id}
+```json
+{
+  "success": true,
+  "data": {
+    "order_id": "550e8400-e29b-41d4-a716-446655440000",
+    "items": [
+      {
+        "sku": "DELL-XPS13-2024",
+        "quantity": 1,
+        "unit_price": 5499.99,
+        "discount": 10.00
+      }
+    ],
+    "total_price": 4949.99,
+    "status": "confirmed"
+  }
+}
 ```
 
 ---
 
-## 🧪 Testes
+# 🔄 Fluxo de Funcionamento
 
-A API pode ser testada utilizando ferramentas como Postman ou Insomnia.
+### 1️⃣ Recebimento da Requisição
+
+O cliente envia uma requisição para criação de uma nova order.
+
+### 2️⃣ Consulta ao Serviço de Catálogo
+
+O serviço consulta o catálogo para obter os dados do produto solicitado.
+
+### 3️⃣ Consulta ao Serviço de Estoque
+
+O sistema verifica se existe quantidade disponível para venda.
+
+### 4️⃣ Validação
+
+São realizadas verificações de produto existente e estoque suficiente.
+
+### 5️⃣ Criação da Order
+
+A order é criada utilizando um identificador UUID único.
+
+### 6️⃣ Confirmação
+
+O pedido é registrado e retornado ao cliente.
 
 ---
 
-## 👥 Equipe
+# 📊 Estrutura da Entidade Order
+
+| Campo        | Tipo      |
+| ------------ | --------- |
+| order_id     | UUID      |
+| sku          | VARCHAR   |
+| product_name | VARCHAR   |
+| quantity     | INTEGER   |
+| unit_price   | NUMERIC   |
+| discount     | NUMERIC   |
+| total_price  | NUMERIC   |
+| status       | VARCHAR   |
+| created_at   | TIMESTAMP |
+
+---
+
+# 🧪 Testes
+
+A API pode ser validada utilizando:
+
+* Postman
+* Insomnia
+* Swagger UI
+
+Documentação automática:
+
+```text
+/docs
+```
+
+---
+
+# 🔧 Controle de Versão
+
+O versionamento do projeto foi realizado utilizando Git.
+
+Principais comandos utilizados:
+
+```bash
+git init
+git add .
+git commit -m "primeiro commit"
+git push origin main
+```
+
+Benefícios:
+
+* Controle das alterações
+* Histórico do projeto
+* Trabalho colaborativo
+* Backup do código
+
+---
+
+# 📂 GitHub
+
+O GitHub foi utilizado como plataforma de hospedagem do código-fonte.
+
+Principais funcionalidades utilizadas:
+
+* Armazenamento remoto
+* Compartilhamento do projeto
+* Controle de versões
+* Colaboração entre integrantes
+
+---
+
+# 🖥️ Implantação de API FastAPI na Máquina EC2
+
+## ☁️ Criação da Instância
+
+O deploy do Serviço de Orders foi realizado utilizando Amazon EC2.
+
+Configurações:
+
+* Ubuntu Linux
+* Instância t2.micro
+* Camada gratuita AWS
+
+---
+
+## 🔐 Criação da Chave SSH
+
+Foi criada uma chave privada para acesso remoto seguro:
+
+```text
+arquivo.pem
+```
+
+Permissão aplicada:
+
+```bash
+chmod 400 arquivo.pem
+```
+
+Conexão:
+
+```bash
+ssh -i arquivo.pem ubuntu@IP_PUBLICO
+```
+
+---
+
+## 🌐 Configuração da Rede
+
+Foram habilitadas as opções:
+
+✅ SSH
+
+✅ HTTP
+
+✅ HTTPS
+
+---
+
+## 📦 Atualização da Máquina
+
+```bash
+sudo apt-get update
+```
+
+---
+
+## 🛠️ Instalação das Dependências
+
+```bash
+sudo apt install -y python3-pip nginx
+```
+
+---
+
+## 🌐 Configuração do NGINX
+
+Arquivo:
+
+```bash
+sudo vim /etc/nginx/sites-enabled/fastapi_nginx
+```
+
+Configuração:
+
+```nginx
+server {
+    listen 80;
+
+    server_name IP_PUBLICO;
+
+    location / {
+        proxy_pass http://127.0.0.1:8000;
+    }
+}
+```
+
+Reiniciar serviço:
+
+```bash
+sudo service nginx restart
+```
+
+---
+
+## 📥 Clonagem do Projeto
+
+```bash
+git clone URL_DO_REPOSITORIO
+```
+
+```bash
+cd orders-service
+```
+
+---
+
+## 📦 Instalação dos Requisitos
+
+```bash
+pip3 install -r requirements.txt
+```
+
+---
+
+## 🚀 Inicialização da API
+
+```bash
+python3 -m uvicorn main:app
+```
+
+A aplicação passou a responder na porta:
+
+```text
+8000
+```
+
+---
+
+## 🔍 Testes em Produção
+
+Após o deploy, foi possível acessar:
+
+```text
+http://IP_PUBLICO/docs
+```
+
+Documentação automática do FastAPI.
+
+Também foi realizado o teste do endpoint:
+
+```text
+http://IP_PUBLICO/health
+```
+
+Resposta esperada:
+
+```json
+{
+  "status": "ok"
+}
+```
+
+---
+
+## ✅ Resultado Obtido
+
+A implantação permitiu disponibilizar o Serviço de Orders na internet utilizando infraestrutura real de nuvem.
+
+A solução foi composta por:
+
+* FastAPI
+* Uvicorn
+* Linux Ubuntu
+* Amazon EC2
+* NGINX
+* GitHub
+
+---
+
+## 🛑 Encerramento da Instância
+
+Após os testes, a instância EC2 foi encerrada para evitar cobranças desnecessárias.
+
+Passos realizados:
+
+1. Acessar EC2 Dashboard
+2. Selecionar a instância
+3. Clicar em **Terminate Instance**
+4. Confirmar encerramento
+
+---
+
+# 👥 Equipe
 
 * Matheus
-* Artur 
+* Artur
 * Max
 * Diego
 * Gabriel
 
 ---
 
-## 📚 Referência
+# 📌 Observações Finais
 
-https://github.com/otavianosilverio/Api-Produtos-Python
+✅ API REST desenvolvida com FastAPI
+
+✅ Arquitetura baseada em microserviços
+
+✅ Integração com Serviço de Catálogo
+
+✅ Integração com Serviço de Estoque
+
+✅ Operações de Orders implementadas
+
+✅ Comunicação utilizando JSON
+
+✅ Versionamento com Git
+
+✅ Hospedagem do código no GitHub
+
+✅ Deploy realizado em ambiente Linux
+
+✅ Utilização de NGINX como proxy reverso
+
+✅ Execução da aplicação através do Uvicorn
+
+✅ Testes realizados localmente e em ambiente de nuvem
 
 ---
 
-## 📌 Observações finais
+# 🎯 Conclusão
 
-* Todos os integrantes possuem acesso ao repositório
-* O projeto segue o padrão REST
-* O versionamento foi feito com Git
+O desenvolvimento do Serviço de Orders permitiu aplicar conceitos fundamentais de APIs REST, FastAPI, integração entre microserviços e comunicação baseada em JSON. Além disso, a implantação utilizando Amazon EC2 proporcionou experiência prática com servidores Linux, configuração de NGINX, acesso remoto via SSH e publicação de aplicações em ambiente de produção.
 
-## 🖥️ Implantação de API FastApi na Máquina EC2
-### 1. Fazer Login na controle AWS: aws.amazon.com
-
-### 2. Clicar no "EC2" no Canto Esquerdo da tela.
-
-### 3. Clicar no botão Laranja "Launch Instances" no canto direito superior.
-
-### 4. Colocar nome, imagem da máquina (Linux), e a versão.
-
-### 5. Instance Type
-Escolher o t2.micro (gratuito)
-
-### 6. Key Pair (Login)
-1) Create new Key pair: Escolher um nome --> Create
-   Deve aparecer uma chave na pasta de Downloads
-   
-### 7. Network Settings
-1) Deixar marcado a opção "Allow SSH traffic from" e do lado disso "Anywhere"
-2) Deixar marcado a opção "Allow HTTP traffic from the internet" e "Allow HTTPs traffic from the internet"
-   
-### 8.Checagem Final
-Depois de conferir todas as configurações selecionadas, clicar no botão laranja "Launch Instance"
-
-### 9. Ver funcionando
-Ir ao "EC2 Dashboard" e ver as Instâncias funcionando, "Instance State" tem que estar Running✅
-Obs.: Se não estiver Running pode estar pendente, é só esperar.
-(CLicar no ID da Instância vê o resumo da instância, incluindo o seu endereço, IP público
-
-### 10. Conectar-se à instância
-1) Clicar em "Connect" no canto superior direito
-2) Clicar na opção de "SSH client", se estiver usando Linux ou Mac as instruções devem estar corretas. Se for Windows pesquisar "como fazer SSH a partir do Windows".
-Obs.: As versões mais recentes do WIndows 10 tem o SSH incluso no S.O
-### 10.1 Como fazer SSH a partir do Windows
-1) No próprio Windows: Configurações -> Sistema -> Recursos Opcionais -> Adicionar recurso opcional: Exibir Recurso -> pesquisar: Servidor OpenSSH
-2) Marcar a caixinha e clicar em "Avançar" e "Instalar"
-#### 10.1.1 Fazer o SSH funcionar
-1) Pesquisar na barra no WIndows: "Serviços", procurar o "Open SSH SSH Server" e clicar 2x para abrir.
-2) Tipo de inicialização deve estar no "Automático", para abrir junto com o Windows.
-3) CLicar em iniciar, e depois em "Aplicar" quando terminado, e depois no "Ok"
-#### 10.1.2 Testando
-1) Abrir o cmd e digitar "ssh "usuario"@"ip", ex: obertobr@192.168.0.10
-2) password: A senha do Windows
-3) digitar "dir" para ver se aparece o .ssh. Obs.: Para entrar de uma rede externa, tem que abrir porta do roteador.
-4) Digitar "start calc", para abrir a calculadora, e "exit" para fechar conexão ao ip.
-
-### 11. Usar o arquivo de chave privada SSH ".pem" criado anteriormente, alterar as permissões para que não seja visível publicamente, e então conectar à instância usando o comando escrito no " Example:"
-1) (Deve estar no diretório onde copiou a chave ".pem"). Dar um "ls" no console, deve aparecer a chave ".pem"
-2) Dar o comando "chmod 400 "nomedachave.pem""
-3) Copiar o comando SSH do "Example:" (Já está preenchido com o nome do arquivo .pem e o endereço da instânci EC2.)
-4) Colar o comando no console.
-5) Fará uma pergunta, responder "yes". Agora estará conectado à instância.
-
-### 12. Atualizar e instalar as dependências na máquina
-1) Escrever no console "sudo apt-get update". (Vai atualizar todos os repositórios que temos acesso a todos os softwares mais recentes)
-2) Escrever no console "sudo apt install -y python3-pip nginx".
-   
-### 13. Direcionar o tráfego depois de iniciar o software NGINX
-1) Criar um novo arquivo dentro deste diretório, dar o comando "sudo vim /etc/nginx/sites-enabled/fastapi_nginx" no console.
-2) Preencher o arquivo de configuração do NGINX, escrevendo no console o comando abaixo:
-   server {
-           listen 80;
-           server_name "copiar o Public IPv4 adress e colar aqui";
-           location / {
-                   proxy_pass http://127.0.0.1:8000;
-           }
-3) Salvar o arquivo e sair
-4) Reiniciar o servidor NGINX, dando o comando "sudo service nginx restart".
-
-### 15. Clonar o projeto FastAPI neste host
-1) Voltar ao projeto GitHub, ir para "code" e depois "Clone"
-2) Com o HTTPS selecionado, copiar o comando que está abaixo e voltar para o terminal
-3) Digitar "git clone " e colar o link que copiou na etapa anterior
-4) Digitar "ls", deve aparecer o nome do diretório
-5) Entrar no diretório digitando "cd "nome do diretório"/"
-6) Checar se os arquivos estão lá, digitando "ls". (Deve aparecer o main.py e requirements.txt, por exemplo)
-
-### 16. Instalar os requisitos
-1) Entrar no arquivo de requisitos digitando "cat requirements.txt". (Há apenas o "fastapi" e o "uvicorn")
-2) Digitar "pip3 install -r requirements.txt".
-
-### 17. Iniciar o servidor FastAPI
-1) Dar "clear" no console
-2) Digitar "python3 -m uvicorn main:app"
-3) Se voltar ao Public IPv4 adress na instância e clicar em "open adress" e ao invés de HTTPS ficar HTTP e dar Enter conseguirá ver que a API pode realmente ser chamada a partir deste endereço
-
-### 18. Comandos para testar junto ao IP
-1) "númerodoip"/list-books
-2) "númerodoip"/docs
-
-### 19. Encerramento
-Antes de encerrar, deve voltar ao console e realmente terminar esta instância. Caso contrário, pode ser cobrado por ele rodando mesmo se tiver na camada gratuita.
-1) Na aba "Instances", clique na caixa para marcar a FastAPI que está em funcionamento, botão direito em cima dela e clicar em "Terminate Instance".
-
-
+O projeto atingiu seus objetivos ao disponibilizar uma API funcional para gerenciamento de pedidos, demonstrando na prática conceitos amplamente utilizados no mercado de desenvolvimento de software e computação em nuvem.
