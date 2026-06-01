@@ -80,7 +80,11 @@ class CriarPedidoRequest(BaseModel):
 # ---------------------------------------------------------------------------
 # POST - CRIAR PEDIDO
 # ---------------------------------------------------------------------------
-@app.post("/v1/orders")
+@app.post(
+    "/v1/orders",
+    summary="Criar pedido",
+    description="Cria um novo pedido validando catálogo e estoque."
+)
 def criar_pedido(request: CriarPedidoRequest):
 
     itens = []
@@ -128,8 +132,11 @@ def criar_pedido(request: CriarPedidoRequest):
 # ---------------------------------------------------------------------------
 # GET - LISTAR TODOS OS PEDIDOS
 # ---------------------------------------------------------------------------
-@app.get("/v1/orders")
+@app.get("/v1/orders",
 def listar_pedidos():
+summary="Listar pedidos",
+description="Retorna todos os pedidos cadastrados."
+)
     return {
         "success": True,
         "data": pedidos
@@ -139,7 +146,10 @@ def listar_pedidos():
 # ---------------------------------------------------------------------------
 # GET - BUSCAR PEDIDO POR ID
 # ---------------------------------------------------------------------------
-@app.get("/v1/orders/{order_id}")
+@app.get("/v1/orders/{order_id}"
+summary="Listar pedidos",
+    description="Retorna todos os pedidos cadastrados."
+)
 def buscar_pedido(order_id: str):
     for pedido in pedidos:
         if pedido["order_id"] == order_id:
