@@ -146,9 +146,9 @@ description="Retorna todos os pedidos cadastrados."
 # ---------------------------------------------------------------------------
 # GET - BUSCAR PEDIDO POR ID
 # ---------------------------------------------------------------------------
-@app.get("/v1/orders/{order_id}"
-summary="Listar pedidos",
-    description="Retorna todos os pedidos cadastrados."
+@app.get("/v1/orders/{order_id}",
+summary="Buscar pedido por ID",
+    description="Retorna um pedido específico."
 )
 def buscar_pedido(order_id: str):
     for pedido in pedidos:
@@ -161,7 +161,10 @@ def buscar_pedido(order_id: str):
 # ---------------------------------------------------------------------------
 # DELETE - REMOVER PEDIDO
 # ---------------------------------------------------------------------------
-@app.delete("/v1/orders/{order_id}")
+@app.delete("/v1/orders/{order_id}",
+summary="Remover pedido",
+description="Remove um pedido existente."
+)
 def deletar_pedido(order_id: str):
     for i, pedido in enumerate(pedidos):
         if pedido["order_id"] == order_id:
