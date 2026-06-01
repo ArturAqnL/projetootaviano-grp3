@@ -57,9 +57,20 @@ pedidos = []
 # ---------------------------------------------------------------------------
 # MODELOS
 # ---------------------------------------------------------------------------
+from pydantic import BaseModel, Field
+
 class ItemPedido(BaseModel):
-    sku: str
-    quantity: int
+    sku: str = Field(
+        ...,
+        description="SKU único do produto",
+        examples=["DELL-XPS13-2024"]
+    )
+
+    quantity: int = Field(
+        ...,
+        description="Quantidade desejada do produto",
+        examples=[1]
+    )
 
 
 class CriarPedidoRequest(BaseModel):
