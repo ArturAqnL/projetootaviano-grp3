@@ -15,6 +15,15 @@ from typing import List
 # ---------------------------------------------------------------------------
 app = FastAPI(
     title="Serviço de Pedidos",
+    description="""
+    API responsável pelo gerenciamento de pedidos do Marketplace Universitário.
+
+    Funcionalidades:
+    - Criar pedidos
+    - Consultar pedidos
+    - Remover pedidos
+    - Verificar disponibilidade do serviço
+    """,
     version="1.0.0",
 )
 
